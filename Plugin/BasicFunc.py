@@ -1,14 +1,50 @@
+from asyncio.windows_events import NULL
 import bpy;
 
+sm_known_materials = (
+    "SM_DifAsgNor",
+    "SM_Glass",
+    "SM_Grass",
+    "SM_Leaves",
+    "SM_DifAsgNorAlpha",
+    "SM_Water",
+    "SM_LightCone",
+    "SM_Liquid"
+)
+
 sm_material_table = {
-    "1": "SM_DifAsgNor",
-    "2": "SM_Glass",
-    "3": "SM_Grass",
-    "4": "SM_Leaves",
-    "5": "SM_DifAsgNorAlpha",
-    "6": "SM_Water",
-    "7": "SM_LightCone",
-    "8": "SM_Liquid"
+    "1": {
+        "name": "SM_DifAsgNor",
+        "color_input_idx": 2
+    },
+    "2": {
+        "name": "SM_Glass",
+        "color_input_idx": 2
+    },
+    "3": {
+        "name": "SM_Grass",
+        "color_input_idx": 2
+    },
+    "4": {
+        "name": "SM_Leaves",
+        "color_input_idx": 2
+    },
+    "5": {
+        "name": "SM_DifAsgNorAlpha",
+        "color_input_idx": 2
+    },
+    "6": {
+        "name": "SM_Water",
+        "color_input_idx": 2
+    },
+    "7": {
+        "name": "SM_LightCone",
+        "color_input_idx": 2
+    },
+    "8": {
+        "name": "SM_Liquid",
+        "color_input_idx": 2
+    }
 }
 
 def node_group_exists(name):
@@ -41,13 +77,40 @@ def is_uuid_valid(uuid_string):
 
     return str(uuid_obj) == uuid_string;
 
-def is_material_valid(mat_name):
-    if len(mat_name) >= 43:
-        mat_color = mat_name[37:43];
+def is_mat_index_valid(material_index):
+    if material_index[0] == "m":
+        try:
+            int_test = int(material_index[1:]);
 
-        return is_color_valid(mat_color);
+            if sm_material_table[material_index[1:]] == None:
+                return False;
+
+            return True;
+        except:
+            return False;
 
     return False;
+
+def is_material_valid(mat_name):
+    sep_name = mat_name.split(sep=" ");
+    sep_name_len = len(sep_name);
+
+    if sep_name_len < 3:
+        return False;
+
+    uuid_len = len(sep_name[0]);
+    color_len = len(sep_name[1]);
+
+    if uuid_len != 36 or color_len != 6:
+        return False;
+
+    if not is_uuid_valid(sep_name[0]) or not is_color_valid(sep_name[1]):
+        return False;
+
+    if sep_name_len == 4 and not is_mat_index_valid(sep_name[3]):
+        return False;
+
+    return True;
 
 
 def check_if_has_node(nodes, name):

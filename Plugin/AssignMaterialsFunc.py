@@ -16,7 +16,7 @@ def IsNodeValid(cur_mat):
     if cur_mat.node_tree == None:
         return False;
 
-    if HasAnyOf(cur_mat.node_tree.nodes, ('SM Tex', 'SM Tex Alpha', 'SM Glass Tex')):
+    if HasAnyOf(cur_mat.node_tree.nodes, sm_known_materials):
         return False;
 
     return True;
@@ -53,9 +53,6 @@ def FindNeededNodes(mat_nodes):
 def GetMaterialOutputNode(mat_nodes):
     mat_output = None;
 
-    #mat_node_amount = len(mat_nodes);
-    #for a in range(mat_node_amount):
-    #    cur_node = mat_nodes[mat_node_amount - a - 1];
     for cur_node in mat_nodes:
         cnode_name = cur_node.bl_idname;
 
@@ -71,13 +68,18 @@ def GetMaterialOutputNode(mat_nodes):
 
     return mat_output;
 
-def CreateSMTexNode(mat_nodes, color):
-    sm_tex = mat_nodes.new('ShaderNodeGroup');
-    sm_tex.node_tree = bpy.data.node_groups['SM Tex'];
-    sm_tex.location = (100, 300);
-    sm_tex.name = 'SM Tex';
+def CreateSMTexNode(mat_nodes, color, settings):
+    node_name = settings["name"];
 
-    sm_tex.inputs[2].default_value = hex_to_rgb(int(color, 16));
+    for group in bpy.data.node_groups:
+        print(group.name_full);
+
+    sm_tex = mat_nodes.new('ShaderNodeGroup');
+    sm_tex.node_tree = bpy.data.node_groups[node_name];
+    sm_tex.location = (100, 300);
+    sm_tex.name = node_name;
+
+    sm_tex.inputs[settings["color_input_idx"]].default_value = hex_to_rgb(int(color, 16));
 
     return sm_tex;
 
@@ -110,12 +112,21 @@ def Assign_Materials_Func(mat_array):
         if not IsNodeValid(cur_mat):
             continue;
 
+        mat_sep_name = cur_mat.name_full.split(sep=" ");
+        mat_sep_name_len = len(mat_sep_name);
+
+        material_index = "1";
+
+        if mat_sep_name_len == 4:
+            material_index = mat_sep_name[3][1:];
+
+        cur_node_data = sm_material_table[material_index];
+
         mat_nodes = cur_mat.node_tree.nodes;
         dif_node, asg_node, nor_node = FindNeededNodes(mat_nodes);
         material_output_node = GetMaterialOutputNode(mat_nodes);
 
-        mat_color = cur_mat.name_full[37:43];
-        SM_Tex_Shader = CreateSMTexNode(mat_nodes, mat_color);
+        SM_Tex_Shader = CreateSMTexNode(mat_nodes, mat_sep_name[1], cur_node_data);
 
         node_links = cur_mat.node_tree.links;
         InitDifNode(dif_node, node_links, SM_Tex_Shader);
