@@ -71,9 +71,6 @@ def GetMaterialOutputNode(mat_nodes):
 def CreateSMTexNode(mat_nodes, color, settings):
     node_name = settings["name"];
 
-    for group in bpy.data.node_groups:
-        print(group.name_full);
-
     sm_tex = mat_nodes.new('ShaderNodeGroup');
     sm_tex.node_tree = bpy.data.node_groups[node_name];
     sm_tex.location = (100, 300);
@@ -119,6 +116,10 @@ def Assign_Materials_Func(mat_array):
 
         if mat_sep_name_len == 4:
             material_index = mat_sep_name[3][1:];
+            mat_dot_idx = material_index.find(".");
+
+            if mat_dot_idx > -1:
+                material_index = material_index[:mat_dot_idx];
 
         cur_node_data = sm_material_table[material_index];
 

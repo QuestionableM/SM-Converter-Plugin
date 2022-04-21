@@ -71,18 +71,25 @@ def is_color_valid(hex_string):
 
 def is_uuid_valid(uuid_string):
     try:
-        uuid_obj = UUID(uuid_string, version=4);
+        uuid_obj = UUID(uuid_string);
     except:
         return False;
 
     return str(uuid_obj) == uuid_string;
 
 def is_mat_index_valid(material_index):
-    if material_index[0] == "m":
-        try:
-            int_test = int(material_index[1:]);
+    mat_idx_str = material_index
 
-            if sm_material_table[material_index[1:]] == None:
+    dot_idx = mat_idx_str.find(".")
+    if dot_idx > -1:
+        mat_idx_str = mat_idx_str[:dot_idx];
+
+    if mat_idx_str[0] == "m":
+        try:
+            mat_idx_number = mat_idx_str[1:];
+            int_test = int(mat_idx_number);
+
+            if sm_material_table[mat_idx_number] == None:
                 return False;
 
             return True;
