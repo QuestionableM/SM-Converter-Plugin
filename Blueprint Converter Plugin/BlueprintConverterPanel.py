@@ -1,7 +1,7 @@
 import bpy;
 
-class BlueprintConverter_PT_Panel(bpy.types.Panel):
-    bl_idname = "BlueprintConverter_PT_Panel";
+class BPCONV_PT_Panel(bpy.types.Panel):
+    bl_idname = "BPCONV_PT_Panel";
     bl_label = "Blueprint Converter";
     bl_category = "Blueprint Converter";
     bl_space_type = "VIEW_3D";

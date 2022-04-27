@@ -27,13 +27,13 @@ import bpy;
 from . AssignMaterials import AssignMaterials_Operator;
 from . AssignMaterialsSelected import AssignMaterialsSelected_Operator;
 from . CreateNodes import CreateNodes_Operator;
-from . BlueprintConverterPanel import BlueprintConverter_PT_Panel;
+from . BlueprintConverterPanel import BPCONV_PT_Panel;
 
 classes = (
     AssignMaterials_Operator,
     AssignMaterialsSelected_Operator,
     CreateNodes_Operator,
-    BlueprintConverter_PT_Panel
+    BPCONV_PT_Panel
 );
 
 register, unregister = bpy.utils.register_classes_factory(classes);
