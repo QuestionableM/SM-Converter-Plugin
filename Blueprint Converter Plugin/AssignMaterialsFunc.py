@@ -91,6 +91,7 @@ def InitAsgNode(asg, links, tex_shader):
     if asg != None:
         asg.location = (-300, 250);
         asg.hide = True;
+        asg.image.colorspace_settings.name='Raw';
         links.new(asg.outputs[0], tex_shader.inputs[3]);
         links.new(asg.outputs[1], tex_shader.inputs[4]);
 
@@ -98,6 +99,7 @@ def InitNorNode(nor, links, tex_shader):
     if nor != None:
         nor.location = (-300, 200);
         nor.hide = True;
+        nor.image.colorspace_settings.name='Raw';
         links.new(nor.outputs[0], tex_shader.inputs[7]);
 
 def ConnectWithOutputNode(out_node, links, tex_shader):
