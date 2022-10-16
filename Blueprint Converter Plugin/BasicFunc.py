@@ -63,7 +63,7 @@ sm_material_whitelist = {
 			"asg_color": 3,
 			"asg_alpha": 4,
 
-			"nor_color": 6
+			"nor_color": 7
 		}
 	}
 }
