@@ -16,7 +16,7 @@ bl_info = {
     "author" : "Questionable Mark",
     "description" : "",
     "blender" : (2, 92, 0),
-    "version" : (0, 0, 6),
+    "version" : (0, 0, 7),
     "location" : "",
     "warning" : "",
     "category" : "Generic"
