@@ -120,6 +120,10 @@ def is_mat_index_valid(material_index):
 
 def get_whitelisted_material_data(mat_name):
 	try:
+		v_dot_idx = mat_name.find(".");
+		if v_dot_idx > -1:
+			return sm_material_whitelist[mat_name[:v_dot_idx]];
+
 		return sm_material_whitelist[mat_name];
 	except:
 		return None;
