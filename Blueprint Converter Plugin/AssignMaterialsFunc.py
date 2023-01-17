@@ -35,16 +35,16 @@ def FindNeededNodes(mat_nodes):
 		for b in range(link_amount):
 			cur_link = node_links.links[b];
 
-			cur_link_socket = cur_link.to_socket.bl_label;
+			cur_link_socket = cur_link.to_socket.name;
 			cur_link_node = cur_link.to_node.bl_label;
 
 			if cur_link_socket == 'Color' and cur_link_node == 'Normal Map':
 				nor_node = cur_node;
 				break;
-			elif cur_link_socket == 'Color' and cur_link_node == 'Principled BSDF':
+			elif cur_link_socket == 'Base Color' and cur_link_node == 'Principled BSDF':
 				dif_node = cur_node;
 				break;
-			elif cur_link_socket == 'Float' and cur_link_node == 'Principled BSDF':
+			elif cur_link_socket == 'Specular' and cur_link_node == 'Principled BSDF':
 				asg_node = cur_node;
 				break;
 
