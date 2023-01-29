@@ -3,7 +3,7 @@ from . CreateNodeFunc import Add_SM_Nodes;
 from . AssignMaterialsFunc import Assign_Materials_Func;
 
 class AssignMaterials_Operator(bpy.types.Operator):
-    bl_idname = "view3d.bp_convert_assign_materials";
+    bl_idname = "view3d.smc_convert_assign_materials";
     bl_label = "Assign Materials";
     bl_description = "Assigns materials automatically for SM blueprints";
 

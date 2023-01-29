@@ -13,59 +13,117 @@ sm_known_materials = (
 	"SM_GroundMaterial"
 )
 
+def sm_water_material_func(mat_nodes, color, settings):
+	node_name = settings["name"];
+
+	sm_water = mat_nodes.new('ShaderNodeGroup');
+	sm_water.node_tree = bpy.data.node_groups[node_name];
+	sm_water.location = (100, 300);
+	sm_water.name = node_name;
+
+	return sm_water;
+
+def sm_chemicals_material_func(mat_nodes, color, settings):
+	node_name = settings["name"];
+
+	sm_chemicals = mat_nodes.new('ShaderNodeGroup');
+	sm_chemicals.node_tree = bpy.data.node_groups[node_name];
+	sm_chemicals.location = (100, 300);
+	sm_chemicals.name = node_name;
+
+	#Configure the parameters
+	sm_chemicals.inputs[0].default_value = hex_to_rgb(int("FF43EB", 16));
+	sm_chemicals.inputs[1].default_value = 0.5
+	sm_chemicals.inputs[2].default_value = 0.2
+	sm_chemicals.inputs[3].default_value = 1.3
+	sm_chemicals.inputs[4].default_value = 0.108
+
+	return sm_chemicals;
+
+sm_default_texture_inputs = {
+	"dif_color": 0,
+	"dif_alpha": 1,
+
+	"asg_color": 3,
+	"asg_alpha": 4,
+
+	"nor_color": 7
+}
+
+sm_default_node_outputs = [ [0, 0] ]
+
 sm_material_table = {
 	"1": {
 		"name": "SM_DifAsgNor",
-		"color_input_idx": 2
+		"color_input_idx": 2,
+		"texture_inputs": sm_default_texture_inputs,
+		"outputs": sm_default_node_outputs
 	},
 	"2": {
 		"name": "SM_Glass",
-		"color_input_idx": 2
+		"color_input_idx": 2,
+		"texture_inputs": sm_default_texture_inputs,
+		"outputs": sm_default_node_outputs
 	},
 	"3": {
 		"name": "SM_Grass",
-		"color_input_idx": 2
+		"color_input_idx": 2,
+		"texture_inputs": { "dif_color": 0, "dif_alpha": 1 },
+		"outputs": sm_default_node_outputs
 	},
 	"4": {
 		"name": "SM_Leaves",
-		"color_input_idx": 2
+		"color_input_idx": 2,
+		"texture_inputs": sm_default_texture_inputs,
+		"outputs": sm_default_node_outputs
 	},
 	"5": {
 		"name": "SM_DifAsgNorAlpha",
-		"color_input_idx": 2
+		"color_input_idx": 2,
+		"texture_inputs": sm_default_texture_inputs,
+		"outputs": sm_default_node_outputs
 	},
 	"6": {
 		"name": "SM_Water",
-		"color_input_idx": 2
+		"func": sm_water_material_func,
+		"outputs": [ [0, 0], [1, 1] ]
 	},
 	"7": {
 		"name": "SM_LightCone",
-		"color_input_idx": 2
+		"color_input_idx": 2,
+		"texture_inputs": sm_default_texture_inputs,
+		"outputs": sm_default_node_outputs
 	},
 	"8": {
 		"name": "SM_Liquid",
-		"color_input_idx": 2
+		"color_input_idx": 2,
+		"texture_inputs": sm_default_texture_inputs,
+		"outputs": sm_default_node_outputs
 	},
 	"9": {
+		"name": "SM_Water",
+		"func": sm_chemicals_material_func,
+		"outputs": [ [0, 0], [1, 1] ]
+	},
+	#10 is Oil (IMPLEMENT_LATER)
+	"11": {
+		"name": "SM_Clutter",
+		"color_input_idx": 2,
+		"texture_inputs": { "dif_color": 0, "dif_alpha": 1 },
+		"outputs": sm_default_node_outputs
+	},
+
+
+	"Gnd": {
 		"name": "SM_GroundMaterial",
-		"color_input_idx": 2
+		"color_input_idx": 2,
+		"texture_inputs": sm_default_texture_inputs,
+		"outputs": sm_default_node_outputs
 	}
 }
 
 sm_material_whitelist = {
-	"TileGroundTerrain": {
-		"index": "9",
-		"color": "ffffff",
-		"texture_inputs": {
-			"dif_color": 0,
-			"dif_alpha": 1,
-
-			"asg_color": 3,
-			"asg_alpha": 4,
-
-			"nor_color": 7
-		}
-	}
+	"TileGroundTerrain": { "index": "Gnd", "color": "ffffff" }
 }
 
 def node_group_exists(name):

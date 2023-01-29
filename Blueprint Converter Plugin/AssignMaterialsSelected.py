@@ -3,7 +3,7 @@ from . CreateNodeFunc import Add_SM_Nodes;
 from . AssignMaterialsFunc import Assign_Materials_Func;
 
 class AssignMaterialsSelected_Operator(bpy.types.Operator):
-    bl_idname = "view3d.bp_convert_assign_materials_selected";
+    bl_idname = "view3d.smc_convert_assign_materials_selected";
     bl_label = "Assign Materials Selected";
     bl_description = "Assigns the materials only to selected blueprints";
 

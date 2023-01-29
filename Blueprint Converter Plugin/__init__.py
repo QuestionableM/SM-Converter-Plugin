@@ -12,11 +12,11 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 bl_info = {
-    "name" : "Blueprint Converter Extension",
+    "name" : "SM Converter Plugin",
     "author" : "Questionable Mark",
     "description" : "",
     "blender" : (2, 92, 0),
-    "version" : (0, 0, 8),
+    "version" : (0, 0, 9),
     "location" : "",
     "warning" : "",
     "category" : "Generic"
@@ -27,7 +27,7 @@ import bpy;
 from . AssignMaterials import AssignMaterials_Operator;
 from . AssignMaterialsSelected import AssignMaterialsSelected_Operator;
 from . CreateNodes import CreateNodes_Operator;
-from . BlueprintConverterPanel import BPCONV_PT_Panel;
+from . SMConverterPanel import BPCONV_PT_Panel;
 
 classes = (
     AssignMaterials_Operator,

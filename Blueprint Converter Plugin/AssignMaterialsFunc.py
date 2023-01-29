@@ -69,42 +69,56 @@ def GetMaterialOutputNode(mat_nodes):
 	return mat_output;
 
 def CreateSMTexNode(mat_nodes, color, settings):
-	node_name = settings["name"];
+	if "func" in settings:
+		return settings["func"](mat_nodes, color, settings);
+	else:
+		node_name = settings["name"];
 
-	sm_tex = mat_nodes.new('ShaderNodeGroup');
-	sm_tex.node_tree = bpy.data.node_groups[node_name];
-	sm_tex.location = (100, 300);
-	sm_tex.name = node_name;
+		sm_tex = mat_nodes.new('ShaderNodeGroup');
+		sm_tex.node_tree = bpy.data.node_groups[node_name];
+		sm_tex.location = (100, 300);
+		sm_tex.name = node_name;
 
-	sm_tex.inputs[settings["color_input_idx"]].default_value = hex_to_rgb(int(color, 16));
+		sm_tex.inputs[settings["color_input_idx"]].default_value = hex_to_rgb(int(color, 16));
 
-	return sm_tex;
+		return sm_tex;
 
-def InitDifNode(dif, links, tex_shader, color_input_idx, alpha_input_idx):
+def InitDifNode(dif, links, tex_shader, v_input_data):
 	if dif != None:
 		dif.location = (-300, 300);
 		dif.hide = True;
-		links.new(dif.outputs[0], tex_shader.inputs[color_input_idx]);
-		links.new(dif.outputs[1], tex_shader.inputs[alpha_input_idx]);
 
-def InitAsgNode(asg, links, tex_shader, color_input_idx, alpha_input_idx):
+		if "dif_color" in v_input_data:
+			links.new(dif.outputs[0], tex_shader.inputs[v_input_data["dif_color"]]);
+
+		if "dif_alpha" in v_input_data:
+			links.new(dif.outputs[1], tex_shader.inputs[v_input_data["dif_alpha"]]);
+
+def InitAsgNode(asg, links, tex_shader, v_input_data):
 	if asg != None:
 		asg.location = (-300, 250);
 		asg.hide = True;
 		asg.image.colorspace_settings.name='Raw';
-		links.new(asg.outputs[0], tex_shader.inputs[color_input_idx]);
-		links.new(asg.outputs[1], tex_shader.inputs[alpha_input_idx]);
 
-def InitNorNode(nor, links, tex_shader, color_input_idx):
+		if "asg_color" in v_input_data:
+			links.new(asg.outputs[0], tex_shader.inputs[v_input_data["asg_color"]]);
+
+		if "asg_alpha" in v_input_data:
+			links.new(asg.outputs[1], tex_shader.inputs[v_input_data["asg_alpha"]]);
+
+def InitNorNode(nor, links, tex_shader, v_input_data):
 	if nor != None:
 		nor.location = (-300, 200);
 		nor.hide = True;
 		nor.image.colorspace_settings.name='Raw';
-		links.new(nor.outputs[0], tex_shader.inputs[color_input_idx]);
 
-def ConnectWithOutputNode(out_node, links, tex_shader):
+		if "nor_color" in v_input_data:
+			links.new(nor.outputs[0], tex_shader.inputs[v_input_data["nor_color"]]);
+
+def ConnectWithOutputNode(out_node, links, tex_shader, v_output_data):
 	if out_node != None:
-		links.new(tex_shader.outputs[0], out_node.inputs[0]);
+		for v_connection in v_output_data:
+			links.new(tex_shader.outputs[v_connection[0]], out_node.inputs[v_connection[1]]);
 
 def Assign_Materials_Func(mat_array):
 	for cur_mat in mat_array:
@@ -113,14 +127,6 @@ def Assign_Materials_Func(mat_array):
 
 		material_index = "1";
 		material_color = "ffffff";
-
-		dif_color_input_idx = 0
-		dif_alpha_input_idx = 1
-
-		asg_color_input_idx = 3
-		asg_alpha_input_idx = 4
-
-		nor_color_input_idx = 7
 
 		whitelisted_data = get_whitelisted_material_data(cur_mat.name_full);
 		if whitelisted_data == None:
@@ -136,31 +142,24 @@ def Assign_Materials_Func(mat_array):
 				if mat_dot_idx > -1:
 					material_index = material_index[:mat_dot_idx];
 		else:
-			material_index = whitelisted_data["index"]
-			material_color = whitelisted_data["color"]
+			material_index = whitelisted_data["index"];
+			material_color = whitelisted_data["color"];
 
-			if "texture_inputs" in whitelisted_data:
-				v_tex_input_data = whitelisted_data["texture_inputs"];
+		v_mat_nodes = cur_mat.node_tree.nodes;
+		dif_node, asg_node, nor_node = FindNeededNodes(v_mat_nodes);
+		v_mat_output_node = GetMaterialOutputNode(v_mat_nodes);
 
-				dif_color_input_idx = v_tex_input_data["dif_color"];
-				dif_alpha_input_idx = v_tex_input_data["dif_alpha"];
+		v_sm_shader_data = sm_material_table[material_index];
+		v_sm_shader_node = CreateSMTexNode(v_mat_nodes, material_color, v_sm_shader_data);
 
-				asg_color_input_idx = v_tex_input_data["asg_color"];
-				asg_alpha_input_idx = v_tex_input_data["asg_alpha"];
+		v_node_links = cur_mat.node_tree.links;
+		if "texture_inputs" in v_sm_shader_data:
+			v_tex_input_data = v_sm_shader_data["texture_inputs"];
 
-				nor_color_input_idx = v_tex_input_data["nor_color"];
+			InitDifNode(dif_node, v_node_links, v_sm_shader_node, v_tex_input_data);
+			InitAsgNode(asg_node, v_node_links, v_sm_shader_node, v_tex_input_data);
+			InitNorNode(nor_node, v_node_links, v_sm_shader_node, v_tex_input_data);
 
-		cur_node_data = sm_material_table[material_index];
-
-		mat_nodes = cur_mat.node_tree.nodes;
-		dif_node, asg_node, nor_node = FindNeededNodes(mat_nodes);
-		material_output_node = GetMaterialOutputNode(mat_nodes);
-
-		SM_Tex_Shader = CreateSMTexNode(mat_nodes, material_color, cur_node_data);
-
-		node_links = cur_mat.node_tree.links;
-		InitDifNode(dif_node, node_links, SM_Tex_Shader, dif_color_input_idx, dif_alpha_input_idx);
-		InitAsgNode(asg_node, node_links, SM_Tex_Shader, asg_color_input_idx, asg_alpha_input_idx);
-		InitNorNode(nor_node, node_links, SM_Tex_Shader, nor_color_input_idx);
-
-		ConnectWithOutputNode(material_output_node, node_links, SM_Tex_Shader);
+		if "outputs" in v_sm_shader_data:
+			v_node_output_data = v_sm_shader_data["outputs"];
+			ConnectWithOutputNode(v_mat_output_node, v_node_links, v_sm_shader_node, v_node_output_data);
