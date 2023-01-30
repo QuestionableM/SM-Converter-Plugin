@@ -40,6 +40,24 @@ def sm_chemicals_material_func(mat_nodes, color, settings):
 
 	return sm_chemicals;
 
+def sm_oil_material_func(mat_nodes, color, settings):
+	node_name = settings["name"];
+
+	sm_oil = mat_nodes.new('ShaderNodeGroup');
+	sm_oil.node_tree = bpy.data.node_groups[node_name];
+	sm_oil.location = (100, 300);
+	sm_oil.name = node_name;
+
+	#Configure the parameters
+	sm_oil.inputs[0].default_value = hex_to_rgb(int("535353", 16));
+	sm_oil.inputs[1].default_value = 1.5
+	sm_oil.inputs[2].default_value = 0.2
+	sm_oil.inputs[3].default_value = 1.25
+	sm_oil.inputs[4].default_value = 0.08
+	sm_oil.inputs[5].default_value = 0.15
+
+	return sm_oil;
+
 sm_default_texture_inputs = {
 	"dif_color": 0,
 	"dif_alpha": 1,
@@ -105,7 +123,11 @@ sm_material_table = {
 		"func": sm_chemicals_material_func,
 		"outputs": [ [0, 0], [1, 1] ]
 	},
-	#10 is Oil (IMPLEMENT_LATER)
+	"10": {
+		"name": "SM_Water",
+		"func": sm_oil_material_func,
+		"outputs": [ [0, 0], [1, 1] ]
+	},
 	"11": {
 		"name": "SM_Clutter",
 		"color_input_idx": 2,
