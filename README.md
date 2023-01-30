@@ -2,8 +2,8 @@
 A plugin for Blender which can easily assign proper materials to models exported by [SM Converter](https://github.com/QuestionableM/SM-Converter)
 
 # How to install
-- [Download](https://github.com/QuestionableM/SM-Converter-Plugin/releases/latest) the latest version of the plugin
-- In `Edit -> Preferences -> Add-ons` click on `Install...` button and select the `SM.Converter.Plugin.zip` file you've just downloaded
+- [Select](https://github.com/QuestionableM/SM-Converter-Plugin/releases/latest) the latest version of the plugin and download `SM.Converter.Plugin.zip` archive
+- In `Edit -> Preferences -> Add-ons` click on `Install...` button and select the `SM.Converter.Plugin.zip` archive
 - Check the checkbox near the plugin name
 
 # How to use
