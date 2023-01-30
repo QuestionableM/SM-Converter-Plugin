@@ -3,7 +3,7 @@ A plugin for Blender which can easily assign proper materials to models exported
 
 # How to install
 - [Select](https://github.com/QuestionableM/SM-Converter-Plugin/releases/latest) the latest version of the plugin and download `SM.Converter.Plugin.zip` archive
-- In `Edit -> Preferences -> Add-ons` click on `Install...` button and select the `SM.Converter.Plugin.zip` archive
+- In `Edit -> Preferences -> Add-ons` click on `Install...` button and select the archive
 - Check the checkbox near the plugin name
 
 # How to use
