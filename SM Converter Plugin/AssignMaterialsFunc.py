@@ -21,6 +21,11 @@ def IsNodeValid(cur_mat):
 
 	return True;
 
+sm_specular_texture_names = {
+	"Specular": True,
+	"Specular IOR Level": True
+}
+
 def FindNeededNodes(mat_nodes):
 	dif_node = None;
 	asg_node = None;
@@ -44,7 +49,7 @@ def FindNeededNodes(mat_nodes):
 			elif cur_link_socket == 'Base Color' and cur_link_node == 'Principled BSDF':
 				dif_node = cur_node;
 				break;
-			elif cur_link_socket == 'Specular' and cur_link_node == 'Principled BSDF':
+			elif (cur_link_socket in sm_specular_texture_names) and cur_link_node == 'Principled BSDF':
 				asg_node = cur_node;
 				break;
 
@@ -98,7 +103,7 @@ def InitAsgNode(asg, links, tex_shader, v_input_data):
 	if asg != None:
 		asg.location = (-300, 250);
 		asg.hide = True;
-		asg.image.colorspace_settings.name='Raw';
+		asg.image.colorspace_settings.name='Non-Color';
 
 		if "asg_color" in v_input_data:
 			links.new(asg.outputs[0], tex_shader.inputs[v_input_data["asg_color"]]);
@@ -110,7 +115,7 @@ def InitNorNode(nor, links, tex_shader, v_input_data):
 	if nor != None:
 		nor.location = (-300, 200);
 		nor.hide = True;
-		nor.image.colorspace_settings.name='Raw';
+		nor.image.colorspace_settings.name='Non-Color';
 
 		if "nor_color" in v_input_data:
 			links.new(nor.outputs[0], tex_shader.inputs[v_input_data["nor_color"]]);
