@@ -1,5 +1,7 @@
 # SM-Converter-Plugin
-A plugin for Blender which can easily assign proper materials to models exported by [SM Converter](https://github.com/QuestionableM/SM-Converter)
+A plugin for Blender which can easily assign proper materials to models exported by [SM Converter](https://github.com/QuestionableM/SM-Converter)<br/>
+
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/QuestionableM/SM-Converter-Plugin/total)
 
 # How to install
 - [Select](https://github.com/QuestionableM/SM-Converter-Plugin/releases/latest) the latest version of the plugin and download `SM.Converter.Plugin.zip` archive
