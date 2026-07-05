@@ -1,5 +1,6 @@
-from asyncio.windows_events import NULL
-import bpy;
+import bpy
+
+from uuid import UUID
 
 sm_known_materials = (
 	"SM_DifAsgNor",
@@ -14,49 +15,49 @@ sm_known_materials = (
 )
 
 def sm_water_material_func(mat_nodes, color, settings):
-	node_name = settings["name"];
+	node_name = settings["name"]
 
-	sm_water = mat_nodes.new('ShaderNodeGroup');
-	sm_water.node_tree = bpy.data.node_groups[node_name];
-	sm_water.location = (100, 300);
-	sm_water.name = node_name;
+	sm_water = mat_nodes.new('ShaderNodeGroup')
+	sm_water.node_tree = bpy.data.node_groups[node_name]
+	sm_water.location = (100, 300)
+	sm_water.name = node_name
 
-	return sm_water;
+	return sm_water
 
 def sm_chemicals_material_func(mat_nodes, color, settings):
-	node_name = settings["name"];
+	node_name = settings["name"]
 
-	sm_chemicals = mat_nodes.new('ShaderNodeGroup');
-	sm_chemicals.node_tree = bpy.data.node_groups[node_name];
-	sm_chemicals.location = (100, 300);
-	sm_chemicals.name = node_name;
+	sm_chemicals = mat_nodes.new('ShaderNodeGroup')
+	sm_chemicals.node_tree = bpy.data.node_groups[node_name]
+	sm_chemicals.location = (100, 300)
+	sm_chemicals.name = node_name
 
 	#Configure the parameters
-	sm_chemicals.inputs[0].default_value = hex_to_rgb(int("FF43EB", 16));
+	sm_chemicals.inputs[0].default_value = hex_to_rgb(int("FF43EB", 16))
 	sm_chemicals.inputs[1].default_value = 0.5
 	sm_chemicals.inputs[2].default_value = 0.2
 	sm_chemicals.inputs[3].default_value = 1.3
 	sm_chemicals.inputs[4].default_value = 0.108
 
-	return sm_chemicals;
+	return sm_chemicals
 
 def sm_oil_material_func(mat_nodes, color, settings):
-	node_name = settings["name"];
+	node_name = settings["name"]
 
-	sm_oil = mat_nodes.new('ShaderNodeGroup');
-	sm_oil.node_tree = bpy.data.node_groups[node_name];
-	sm_oil.location = (100, 300);
-	sm_oil.name = node_name;
+	sm_oil = mat_nodes.new('ShaderNodeGroup')
+	sm_oil.node_tree = bpy.data.node_groups[node_name]
+	sm_oil.location = (100, 300)
+	sm_oil.name = node_name
 
 	#Configure the parameters
-	sm_oil.inputs[0].default_value = hex_to_rgb(int("535353", 16));
+	sm_oil.inputs[0].default_value = hex_to_rgb(int("535353", 16))
 	sm_oil.inputs[1].default_value = 1.5
 	sm_oil.inputs[2].default_value = 0.2
 	sm_oil.inputs[3].default_value = 1.25
 	sm_oil.inputs[4].default_value = 0.08
 	sm_oil.inputs[5].default_value = 0.15
 
-	return sm_oil;
+	return sm_oil
 
 sm_default_texture_inputs = {
 	"dif_color": 0,
@@ -149,107 +150,103 @@ sm_material_whitelist = {
 }
 
 def node_group_exists(name):
-	node_groups = bpy.data.node_groups;
-	node_amount = len(node_groups);
+	node_groups = bpy.data.node_groups
+	node_amount = len(node_groups)
 
 	for a in range(node_amount):
-		cur_group = node_groups[a];
+		cur_group = node_groups[a]
 
 		if cur_group.name_full == name:
-			return True;
+			return True
 
-	return False;
-
-from uuid import UUID;
+	return False
 
 def is_color_valid(hex_string):
 	try:
-		int(hex_string, 16);
+		int(hex_string, 16)
 	except:
-		return False;
+		return False
 
-	return True;
+	return True
 
 def is_uuid_valid(uuid_string):
 	try:
-		uuid_obj = UUID(uuid_string);
+		uuid_obj = UUID(uuid_string)
 	except:
-		return False;
+		return False
 
-	return str(uuid_obj) == uuid_string;
+	return str(uuid_obj) == uuid_string
 
 def is_mat_index_valid(material_index):
 	mat_idx_str = material_index
 
 	dot_idx = mat_idx_str.find(".")
 	if dot_idx > -1:
-		mat_idx_str = mat_idx_str[:dot_idx];
+		mat_idx_str = mat_idx_str[:dot_idx]
 
 	if mat_idx_str[0] == "m":
 		try:
-			mat_idx_number = mat_idx_str[1:];
+			mat_idx_number = mat_idx_str[1:]
 
 			if sm_material_table[mat_idx_number] == None:
-				return False;
+				return False
 
-			return True;
+			return True
 		except:
-			return False;
+			return False
 
-	return False;
+	return False
 
 def get_whitelisted_material_data(mat_name):
 	try:
-		v_dot_idx = mat_name.find(".");
+		v_dot_idx = mat_name.find(".")
 		if v_dot_idx > -1:
-			return sm_material_whitelist[mat_name[:v_dot_idx]];
+			return sm_material_whitelist[mat_name[:v_dot_idx]]
 
-		return sm_material_whitelist[mat_name];
+		return sm_material_whitelist[mat_name]
 	except:
-		return None;
-
-	return None;
+		return None
 
 def is_material_valid(mat_name):
 	if get_whitelisted_material_data(mat_name) != None:
-		return True;
+		return True
 
-	sep_name = mat_name.split(sep=" ");
-	sep_name_len = len(sep_name);
+	sep_name = mat_name.split(sep=" ")
+	sep_name_len = len(sep_name)
 
 	if sep_name_len < 3:
-		return False;
+		return False
 
-	uuid_len = len(sep_name[0]);
-	color_len = len(sep_name[1]);
+	uuid_len = len(sep_name[0])
+	color_len = len(sep_name[1])
 
 	if uuid_len != 36 or color_len != 6:
-		return False;
+		return False
 
 	if not is_uuid_valid(sep_name[0]) or not is_color_valid(sep_name[1]):
-		return False;
+		return False
 
 	if sep_name_len == 4 and not is_mat_index_valid(sep_name[3]):
-		return False;
+		return False
 
-	return True;
+	return True
 
 
 def check_if_has_node(nodes, name):
-	node_amount = len(nodes);
+	node_amount = len(nodes)
 
 	for a in range(node_amount):
-		cur_node = nodes[a];
+		cur_node = nodes[a]
 
 		if cur_node.name == name:
-			return True;
+			return True
 
-	return False;
+	return False
 
 def remove_node_links(node_tree, node):
 	for out in node.outputs:
 		for lnk in out.links:
-			node_tree.links.remove(lnk);
+			node_tree.links.remove(lnk)
 
 def srgb_to_linearrgb(c):
 	if   c < 0:       return 0

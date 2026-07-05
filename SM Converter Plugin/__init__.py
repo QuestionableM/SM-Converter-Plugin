@@ -16,24 +16,24 @@ bl_info = {
     "author" : "Questionable Mark",
     "description" : "",
     "blender" : (2, 92, 0),
-    "version" : (0, 0, 9),
+    "version" : (0, 0, 10),
     "location" : "",
     "warning" : "",
     "category" : "Generic"
 }
 
-import bpy;
+import bpy
 
-from . AssignMaterials import AssignMaterials_Operator;
-from . AssignMaterialsSelected import AssignMaterialsSelected_Operator;
-from . CreateNodes import CreateNodes_Operator;
-from . SMConverterPanel import BPCONV_PT_Panel;
+from AssignMaterials import AssignMaterials_Operator
+from AssignMaterialsSelected import AssignMaterialsSelected_Operator
+from CreateNodes import CreateNodes_Operator
+from SMConverterPanel import BPCONV_PT_Panel
 
 classes = (
     AssignMaterials_Operator,
     AssignMaterialsSelected_Operator,
     CreateNodes_Operator,
     BPCONV_PT_Panel
-);
+)
 
-register, unregister = bpy.utils.register_classes_factory(classes);
+register, unregister = bpy.utils.register_classes_factory(classes)
