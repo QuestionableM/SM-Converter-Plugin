@@ -1,6 +1,6 @@
 import bpy
 
-from CreateNodeFunc import Add_SM_Nodes
+from . CreateNodeFunc import Add_SM_Nodes
 
 class CreateNodes_Operator(bpy.types.Operator):
     bl_idname = "view3d.smc_convert_create_nodes"

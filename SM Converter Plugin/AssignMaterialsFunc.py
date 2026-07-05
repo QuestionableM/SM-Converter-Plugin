@@ -1,22 +1,23 @@
 import bpy
-import BasicFunc as bfunc
+
+from . BasicFunc import *
 
 def HasAnyOf(node_tree, obj_list):
 	obj_count = len(obj_list)
 	for i in range(obj_count):
-		if bfunc.check_if_has_node(node_tree, obj_list[i]):
+		if check_if_has_node(node_tree, obj_list[i]):
 			return True
 
 	return False
 
 def IsNodeValid(cur_mat):
-	if not bfunc.is_material_valid(cur_mat.name_full):
+	if not is_material_valid(cur_mat.name_full):
 		return False
 
 	if cur_mat.node_tree == None:
 		return False
 
-	if HasAnyOf(cur_mat.node_tree.nodes, bfunc.sm_known_materials):
+	if HasAnyOf(cur_mat.node_tree.nodes, sm_known_materials):
 		return False
 
 	return True
@@ -84,7 +85,7 @@ def CreateSMTexNode(mat_nodes, color, settings):
 		sm_tex.location = (100, 300)
 		sm_tex.name = node_name
 
-		sm_tex.inputs[settings["color_input_idx"]].default_value = bfunc.hex_to_rgb(int(color, 16))
+		sm_tex.inputs[settings["color_input_idx"]].default_value = hex_to_rgb(int(color, 16))
 
 		return sm_tex
 
@@ -133,7 +134,7 @@ def Assign_Materials_Func(mat_array):
 		material_index = "1"
 		material_color = "ffffff"
 
-		whitelisted_data = bfunc.get_whitelisted_material_data(cur_mat.name_full)
+		whitelisted_data = get_whitelisted_material_data(cur_mat.name_full)
 		if whitelisted_data == None:
 			mat_sep_name = cur_mat.name_full.split(sep=" ")
 			mat_sep_name_len = len(mat_sep_name)
@@ -154,7 +155,7 @@ def Assign_Materials_Func(mat_array):
 		dif_node, asg_node, nor_node = FindNeededNodes(v_mat_nodes)
 		v_mat_output_node = GetMaterialOutputNode(v_mat_nodes)
 
-		v_sm_shader_data = bfunc.sm_material_table[material_index]
+		v_sm_shader_data = sm_material_table[material_index]
 		v_sm_shader_node = CreateSMTexNode(v_mat_nodes, material_color, v_sm_shader_data)
 
 		v_node_links = cur_mat.node_tree.links

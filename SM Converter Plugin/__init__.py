@@ -24,10 +24,10 @@ bl_info = {
 
 import bpy
 
-from AssignMaterials import AssignMaterials_Operator
-from AssignMaterialsSelected import AssignMaterialsSelected_Operator
-from CreateNodes import CreateNodes_Operator
-from SMConverterPanel import BPCONV_PT_Panel
+from . AssignMaterials import AssignMaterials_Operator
+from . AssignMaterialsSelected import AssignMaterialsSelected_Operator
+from . CreateNodes import CreateNodes_Operator
+from . SMConverterPanel import BPCONV_PT_Panel
 
 classes = (
     AssignMaterials_Operator,

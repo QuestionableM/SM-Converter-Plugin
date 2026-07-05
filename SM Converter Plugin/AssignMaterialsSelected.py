@@ -1,7 +1,7 @@
 import bpy
 
-from CreateNodeFunc import Add_SM_Nodes
-from AssignMaterialsFunc import Assign_Materials_Func
+from . CreateNodeFunc import Add_SM_Nodes
+from . AssignMaterialsFunc import Assign_Materials_Func
 
 class AssignMaterialsSelected_Operator(bpy.types.Operator):
     bl_idname = "view3d.smc_convert_assign_materials_selected"
